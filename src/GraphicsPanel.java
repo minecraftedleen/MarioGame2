@@ -11,6 +11,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
     private BufferedImage background;
     private Player player;
     private boolean[] pressedKeys;
+    private JButton clearCoins;
     private ArrayList<Coin> coins;
     private Timer timer;
     private int time;
@@ -21,16 +22,19 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        clearCoins = new JButton("Clear Coins");
         player = new Player("src/marioleft.png", "src/marioright.png", name);
         coins = new ArrayList<>();
         pressedKeys = new boolean[128];
         time = 0;
         timer = new Timer(1000, this); // this Timer will call the actionPerformed interface method every 1000ms = 1 second
         timer.start();
+        add(clearCoins);
         addKeyListener(this);
         addMouseListener(this);
         setFocusable(true); // this line of code + one below makes this panel active for keylistener events
         requestFocusInWindow(); // see comment above
+        clearCoins.addActionListener(this);
     }
 
     @Override
@@ -56,6 +60,8 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
         g.setFont(new Font("Courier New", Font.BOLD, 24));
         g.drawString(player.getName() + "'s Score: " + player.getScore(), 20, 40);
         g.drawString("Time: " + time, 20, 70);
+
+
 
         // player moves left (A)
         if (pressedKeys[65]) {
@@ -122,6 +128,12 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof Timer) {
             time++;
+        }
+        if (e.getSource() instanceof JButton) {
+            JButton button = (JButton) e.getSource();
+            if (button == clearCoins) {
+                coins.clear();
+            }
         }
     }
 }
